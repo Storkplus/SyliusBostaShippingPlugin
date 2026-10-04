@@ -1,0 +1,6 @@
+storkplus_sylius_bosta_shipping:
+    flash:
+        created: 'تم إنشاء شحنة بوسطة، رقم التتبع %tracking%.'
+        recreated: 'تم إنشاء شحنة بوسطة جديدة، رقم التتبع %tracking%.'
+        refreshed: 'تم تحديث حالة بوسطة: %state%.'
+        failed: 'بوسطة: %reason%'

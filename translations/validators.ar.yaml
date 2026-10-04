@@ -1,0 +1,3 @@
+storkplus_sylius_bosta_shipping:
+    api_key:
+        not_blank: 'أدخل مفتاح API الخاص ببوسطة.'

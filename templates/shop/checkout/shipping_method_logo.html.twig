@@ -1,0 +1,7 @@
+{% set method = hookable_metadata.context.method %}
+
+{% if bosta_is_method(method) %}
+    <div class="ps-4 mt-1" {{ sylius_test_html_attribute('bosta-logo') }}>
+        {% include '@StorkplusSyliusBostaShippingPlugin/shared/bosta_logo.svg.twig' with { height: 22 } %}
+    </div>
+{% endif %}

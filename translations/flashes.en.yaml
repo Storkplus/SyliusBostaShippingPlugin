@@ -1,0 +1,6 @@
+storkplus_sylius_bosta_shipping:
+    flash:
+        created: 'Bosta delivery created, tracking number %tracking%.'
+        recreated: 'New Bosta delivery created, tracking number %tracking%.'
+        refreshed: 'Bosta status updated: %state%.'
+        failed: 'Bosta: %reason%'

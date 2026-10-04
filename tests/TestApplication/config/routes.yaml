@@ -1,0 +1,2 @@
+storkplus_sylius_bosta_shipping:
+    resource: "@StorkplusSyliusBostaShippingPlugin/config/routes.yaml"

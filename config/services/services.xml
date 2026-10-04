@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <services>
+        <!-- Bosta API -->
+        <service id="storkplus_sylius_bosta_shipping.client" class="Storkplus\SyliusBostaShippingPlugin\Api\BostaClient">
+            <argument type="service" id="http_client" />
+            <argument type="service" id="cache.app" />
+            <argument>%storkplus_sylius_bosta_shipping.api_base_url%</argument>
+            <argument>%storkplus_sylius_bosta_shipping.timeout%</argument>
+            <argument type="service" id="logger" />
+            <tag name="monolog.logger" channel="bosta" />
+        </service>
+        <service id="Storkplus\SyliusBostaShippingPlugin\Api\BostaClientInterface" alias="storkplus_sylius_bosta_shipping.client" />
+
+        <service id="storkplus_sylius_bosta_shipping.address_resolver" class="Storkplus\SyliusBostaShippingPlugin\Address\BostaAddressResolver">
+            <argument type="service" id="storkplus_sylius_bosta_shipping.client" />
+        </service>
+        <service id="Storkplus\SyliusBostaShippingPlugin\Address\BostaAddressResolverInterface" alias="storkplus_sylius_bosta_shipping.address_resolver" />
+
+        <service id="storkplus_sylius_bosta_shipping.payload_factory" class="Storkplus\SyliusBostaShippingPlugin\Payload\DeliveryPayloadFactory">
+            <argument type="service" id="storkplus_sylius_bosta_shipping.address_resolver" />
+            <argument type="service" id="router" />
+        </service>
+
+        <service id="storkplus_sylius_bosta_shipping.repository.delivery" class="Storkplus\SyliusBostaShippingPlugin\Repository\BostaDeliveryRepository">
+            <factory service="doctrine.orm.entity_manager" method="getRepository" />
+            <argument>Storkplus\SyliusBostaShippingPlugin\Entity\BostaDelivery</argument>
+        </service>
+        <service id="Storkplus\SyliusBostaShippingPlugin\Repository\BostaDeliveryRepository" alias="storkplus_sylius_bosta_shipping.repository.delivery" />
+
+        <service id="storkplus_sylius_bosta_shipping.state_applier" class="Storkplus\SyliusBostaShippingPlugin\Manager\DeliveryStateApplier">
+            <argument type="service" id="sylius_abstraction.state_machine" />
+            <argument type="service" id="logger" />
+            <tag name="monolog.logger" channel="bosta" />
+        </service>
+
+        <service id="storkplus_sylius_bosta_shipping.manager" class="Storkplus\SyliusBostaShippingPlugin\Manager\BostaDeliveryManager">
+            <argument type="service" id="storkplus_sylius_bosta_shipping.client" />
+            <argument type="service" id="storkplus_sylius_bosta_shipping.payload_factory" />
+            <argument type="service" id="storkplus_sylius_bosta_shipping.state_applier" />
+            <argument type="service" id="storkplus_sylius_bosta_shipping.repository.delivery" />
+            <argument type="service" id="doctrine.orm.entity_manager" />
+            <argument type="service" id="logger" />
+            <tag name="monolog.logger" channel="bosta" />
+        </service>
+        <service id="Storkplus\SyliusBostaShippingPlugin\Manager\BostaDeliveryManagerInterface" alias="storkplus_sylius_bosta_shipping.manager" />
+
+        <!-- Shipping calculator + its configuration form -->
+        <service id="storkplus_sylius_bosta_shipping.calculator" class="Storkplus\SyliusBostaShippingPlugin\Calculator\BostaShippingCalculator">
+            <argument type="service" id="storkplus_sylius_bosta_shipping.client" />
+            <argument type="service" id="storkplus_sylius_bosta_shipping.address_resolver" />
+            <argument type="service" id="cache.app" />
+            <argument type="service" id="logger" />
+            <tag name="monolog.logger" channel="bosta" />
+            <tag name="sylius.shipping_calculator" calculator="bosta"
+                 form-type="Storkplus\SyliusBostaShippingPlugin\Form\Type\BostaCalculatorConfigurationType"
+                 label="storkplus_sylius_bosta_shipping.calculator" />
+        </service>
+
+        <service id="Storkplus\SyliusBostaShippingPlugin\Form\Type\BostaCalculatorConfigurationType">
+            <argument type="service" id="storkplus_sylius_bosta_shipping.client" />
+            <argument type="service" id="router" />
+            <argument type="service" id="sylius.repository.payment_method" />
+            <tag name="form.type" />
+        </service>
+
+        <!-- Automatic creation once the order is ready to ship -->
+        <service id="storkplus_sylius_bosta_shipping.listener.auto_create" class="Storkplus\SyliusBostaShippingPlugin\EventListener\AutoCreateDeliveryListener">
+            <argument type="service" id="storkplus_sylius_bosta_shipping.manager" />
+            <argument type="service" id="sylius.repository.shipment" />
+            <argument type="service" id="doctrine.orm.entity_manager" />
+            <argument type="service" id="logger" />
+            <tag name="monolog.logger" channel="bosta" />
+            <tag name="kernel.event_listener" event="workflow.sylius_order_checkout.completed.complete" method="onCheckoutCompleted" />
+            <tag name="kernel.event_listener" event="workflow.sylius_order_payment.completed.pay" method="onOrderPaid" />
+            <tag name="kernel.event_listener" event="kernel.terminate" method="flush" />
+            <tag name="kernel.event_listener" event="console.terminate" method="flush" />
+        </service>
+
+        <!-- Controllers -->
+        <service id="storkplus_sylius_bosta_shipping.controller.webhook" class="Storkplus\SyliusBostaShippingPlugin\Controller\WebhookAction" public="true">
+            <argument type="service" id="storkplus_sylius_bosta_shipping.repository.delivery" />
+            <argument type="service" id="storkplus_sylius_bosta_shipping.state_applier" />
+            <argument type="service" id="doctrine.orm.entity_manager" />
+            <argument type="service" id="logger" />
+            <tag name="monolog.logger" channel="bosta" />
+            <tag name="controller.service_arguments" />
+        </service>
+
+        <service id="storkplus_sylius_bosta_shipping.controller.admin" class="Storkplus\SyliusBostaShippingPlugin\Controller\AdminDeliveryController" public="true">
+            <argument type="service" id="sylius.repository.shipment" />
+            <argument type="service" id="storkplus_sylius_bosta_shipping.manager" />
+            <argument type="service" id="storkplus_sylius_bosta_shipping.client" />
+            <argument type="service" id="security.csrf.token_manager" />
+            <argument type="service" id="router" />
+            <tag name="controller.service_arguments" />
+        </service>
+
+        <service id="storkplus_sylius_bosta_shipping.console.sync" class="Storkplus\SyliusBostaShippingPlugin\Console\SyncCommand">
+            <argument type="service" id="storkplus_sylius_bosta_shipping.repository.delivery" />
+            <argument type="service" id="storkplus_sylius_bosta_shipping.manager" />
+            <tag name="console.command" />
+        </service>
+
+        <service id="storkplus_sylius_bosta_shipping.twig.extension" class="Storkplus\SyliusBostaShippingPlugin\Twig\BostaExtension">
+            <argument type="service" id="storkplus_sylius_bosta_shipping.repository.delivery" />
+            <tag name="twig.extension" />
+        </service>
+    </services>
+</container>

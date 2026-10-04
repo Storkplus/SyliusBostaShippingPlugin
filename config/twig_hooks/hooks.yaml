@@ -1,0 +1,21 @@
+sylius_twig_hooks:
+    hooks:
+        'sylius_admin.order.show.content.sections#left':
+            bosta:
+                template: '@StorkplusSyliusBostaShippingPlugin/admin/order/show/bosta.html.twig'
+                priority: -10
+
+        'sylius_shop.checkout.select_shipping.content.form.shipments.shipment.choice.details':
+            bosta_logo:
+                template: '@StorkplusSyliusBostaShippingPlugin/shop/checkout/shipping_method_logo.html.twig'
+                priority: 50
+
+        'sylius_shop.shared.order.show.summary.statuses.shipments.list':
+            bosta_tracking:
+                template: '@StorkplusSyliusBostaShippingPlugin/shop/order/bosta_tracking.html.twig'
+                priority: 50
+
+        'sylius_shop.order.show.content':
+            bosta_tracking:
+                template: '@StorkplusSyliusBostaShippingPlugin/shop/order/bosta_order_tracking.html.twig'
+                priority: 50

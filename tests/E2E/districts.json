@@ -1,0 +1,164 @@
+[
+ {
+  "cityId": "Jrb6X6ucjiYgMP4T7",
+  "cityName": "Alexandria",
+  "cityOtherName": "الاسكندريه",
+  "cityCode": "EG-02",
+  "districts": [
+   {
+    "zoneId": "eSzcbUZsRAH",
+    "zoneName": "Sidi Gaber",
+    "zoneOtherName": "سيدي جابر",
+    "districtId": "TIOHAQrPWD",
+    "districtName": "Sidi Gaber",
+    "districtOtherName": "سيدي جابر",
+    "pickupAvailability": true,
+    "dropOffAvailability": true
+   },
+   {
+    "zoneId": "eSzcbUZsRAH",
+    "zoneName": "Sidi Gaber",
+    "zoneOtherName": "سيدي جابر",
+    "districtId": "fABzAtl0E5",
+    "districtName": "Smouha",
+    "districtOtherName": "سموحه",
+    "pickupAvailability": true,
+    "dropOffAvailability": true
+   }
+  ]
+ },
+ {
+  "cityId": "FceDyHXwpSYYF9zGW",
+  "cityName": "Cairo",
+  "cityOtherName": "القاهره",
+  "cityCode": "EG-01",
+  "districts": [
+   {
+    "zoneId": "EYNsM7fCli",
+    "zoneName": "Bab ElSharia",
+    "zoneOtherName": "باب الشعريه",
+    "districtId": "N7wl5YqQ1HU",
+    "districtName": "ElNasr",
+    "districtOtherName": "النصر",
+    "pickupAvailability": true,
+    "dropOffAvailability": true
+   },
+   {
+    "zoneId": "oTL8FAlzHa",
+    "zoneName": "ElMaadi",
+    "zoneOtherName": "المعادي",
+    "districtId": "u4U-TSA_cG",
+    "districtName": "ElMaadi",
+    "districtOtherName": "المعادي",
+    "pickupAvailability": true,
+    "dropOffAvailability": true
+   },
+   {
+    "zoneId": "oTL8FAlzHa",
+    "zoneName": "ElMaadi",
+    "zoneOtherName": "المعادي",
+    "districtId": "b8YUKWQ88p",
+    "districtName": "New Maadi",
+    "districtOtherName": "المعادي الجديده",
+    "pickupAvailability": true,
+    "dropOffAvailability": true
+   },
+   {
+    "zoneId": "3wlBON0dNs",
+    "zoneName": "ElZamalek",
+    "zoneOtherName": "الزمالك",
+    "districtId": "HWgFSqFEILN",
+    "districtName": "ElZamalek",
+    "districtOtherName": "الزمالك",
+    "pickupAvailability": true,
+    "dropOffAvailability": true
+   },
+   {
+    "zoneId": "8wlSvImUB7P",
+    "zoneName": "Nasr City",
+    "zoneOtherName": "مدينه نصر",
+    "districtId": "vJrVlW-OjHO",
+    "districtName": "ElHay 06 (Nasr City)",
+    "districtOtherName": "الحي السادس (مدينه نصر)",
+    "pickupAvailability": true,
+    "dropOffAvailability": true
+   },
+   {
+    "zoneId": "8wlSvImUB7P",
+    "zoneName": "Nasr City",
+    "zoneOtherName": "مدينه نصر",
+    "districtId": "VPRW3NEl5WQ",
+    "districtName": "Zahraa Nasr City",
+    "districtOtherName": "زهراء مدينه نصر - شوارع",
+    "pickupAvailability": true,
+    "dropOffAvailability": true
+   }
+  ]
+ },
+ {
+  "cityId": "yp3atroeTwnyiBNKE",
+  "cityName": "El Kalioubia",
+  "cityOtherName": "القليوبيه",
+  "cityCode": "EG-06",
+  "districts": []
+ },
+ {
+  "cityId": "0064Qb0OgcA",
+  "cityName": "Giza",
+  "cityOtherName": "الجيزه",
+  "cityCode": "EG-25",
+  "districts": [
+   {
+    "zoneId": "QoHN-zG2tF",
+    "zoneName": "6 October",
+    "zoneOtherName": "٦ اكتوبر",
+    "districtId": "CRaIgjcxU-N",
+    "districtName": "District 01 (06 October)",
+    "districtOtherName": "الحي 01 (٦ اكتوبر)",
+    "pickupAvailability": true,
+    "dropOffAvailability": true
+   },
+   {
+    "zoneId": "QoHN-zG2tF",
+    "zoneName": "6 October",
+    "zoneOtherName": "٦ اكتوبر",
+    "districtId": "jdW_Aq5caxO",
+    "districtName": "October Gardens",
+    "districtOtherName": "حدائق أكتوبر",
+    "pickupAvailability": true,
+    "dropOffAvailability": true,
+    "notAllowedBulkyOrders": true
+   },
+   {
+    "zoneId": "RV-5b2tDKm-",
+    "zoneName": "Dokki",
+    "zoneOtherName": "الدقي",
+    "districtId": "ILMhxwMgTrH",
+    "districtName": "Dokki",
+    "districtOtherName": "الدقي",
+    "pickupAvailability": true,
+    "dropOffAvailability": true
+   },
+   {
+    "zoneId": "CHZJGpbyab",
+    "zoneName": "ElSheikh Zayed",
+    "zoneOtherName": "الشيخ زايد",
+    "districtId": "rdvFQsb5Qdl",
+    "districtName": "ElSheikh Zayed",
+    "districtOtherName": "الشيخ زايد",
+    "pickupAvailability": true,
+    "dropOffAvailability": true
+   },
+   {
+    "zoneId": "CHZJGpbyab",
+    "zoneName": "ElSheikh Zayed",
+    "zoneOtherName": "الشيخ زايد",
+    "districtId": "iJTRvhSmwAL",
+    "districtName": "District 01 (ElSheikh Zayed)",
+    "districtOtherName": "الحي 01 (الشيخ زايد)",
+    "pickupAvailability": true,
+    "dropOffAvailability": true
+   }
+  ]
+ }
+]

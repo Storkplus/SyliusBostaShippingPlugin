@@ -1,0 +1,33 @@
+storkplus_sylius_bosta_shipping_webhook:
+    path: /shipping/bosta/webhook
+    methods: [GET, POST]
+    defaults:
+        _controller: storkplus_sylius_bosta_shipping.controller.webhook
+
+storkplus_sylius_bosta_shipping_admin_create:
+    path: /admin/bosta/shipments/{id}/create
+    methods: [POST]
+    requirements: { id: '\d+' }
+    defaults:
+        _controller: storkplus_sylius_bosta_shipping.controller.admin::create
+
+storkplus_sylius_bosta_shipping_admin_recreate:
+    path: /admin/bosta/shipments/{id}/recreate
+    methods: [POST]
+    requirements: { id: '\d+' }
+    defaults:
+        _controller: storkplus_sylius_bosta_shipping.controller.admin::recreate
+
+storkplus_sylius_bosta_shipping_admin_refresh:
+    path: /admin/bosta/shipments/{id}/refresh
+    methods: [POST]
+    requirements: { id: '\d+' }
+    defaults:
+        _controller: storkplus_sylius_bosta_shipping.controller.admin::refresh
+
+storkplus_sylius_bosta_shipping_admin_awb:
+    path: /admin/bosta/shipments/{id}/airway-bill
+    methods: [GET]
+    requirements: { id: '\d+' }
+    defaults:
+        _controller: storkplus_sylius_bosta_shipping.controller.admin::airwayBill

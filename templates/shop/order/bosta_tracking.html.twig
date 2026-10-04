@@ -1,0 +1,11 @@
+{% set shipment = hookable_metadata.context.shipment %}
+{% set delivery = bosta_delivery(shipment) %}
+
+{% if delivery is not null and delivery.created and delivery.trackingNumber %}
+    <div class="d-flex align-items-center gap-2" {{ sylius_test_html_attribute('bosta-tracking') }}>
+        {% include '@StorkplusSyliusBostaShippingPlugin/shared/bosta_logo.svg.twig' with { height: 16 } %}
+        <a href="{{ bosta_customer_tracking_url(delivery.trackingNumber) }}" target="_blank" rel="noopener">
+            {{ 'storkplus_sylius_bosta_shipping.ui.track'|trans({ '%tracking%': delivery.trackingNumber }) }}
+        </a>
+    </div>
+{% endif %}

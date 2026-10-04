@@ -1,0 +1,5 @@
+imports:
+    - { resource: "@StorkplusSyliusBostaShippingPlugin/tests/TestApplication/config/config.yaml" }
+
+storkplus_sylius_bosta_shipping:
+    api_base_url: 'http://bosta-mock:8002/api/v2'

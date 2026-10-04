@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="Storkplus\SyliusBostaShippingPlugin\Entity\BostaDelivery"
+            table="storkplus_bosta_delivery"
+            repository-class="Storkplus\SyliusBostaShippingPlugin\Repository\BostaDeliveryRepository">
+        <indexes>
+            <index name="idx_bosta_delivery_tracking" columns="tracking_number"/>
+            <index name="idx_bosta_delivery_status" columns="status"/>
+        </indexes>
+
+        <id name="id" type="integer">
+            <generator strategy="AUTO"/>
+        </id>
+
+        <field name="status" type="string" length="16"/>
+        <field name="deliveryId" column="delivery_id" type="string" length="64" nullable="true"/>
+        <field name="trackingNumber" column="tracking_number" type="string" length="64" nullable="true"/>
+        <field name="sequence" type="integer"/>
+        <field name="stateCode" column="state_code" type="integer" nullable="true"/>
+        <field name="stateLabel" column="state_label" type="string" length="64" nullable="true"/>
+        <field name="exceptionReason" column="exception_reason" type="string" length="500" nullable="true"/>
+        <field name="lastError" column="last_error" type="text" nullable="true"/>
+        <field name="attempts" type="integer"/>
+        <field name="lastAttemptAt" column="last_attempt_at" type="datetime_immutable" nullable="true"/>
+        <field name="lastWebhookAt" column="last_webhook_at" type="datetime_immutable" nullable="true"/>
+        <field name="createdAt" column="created_at" type="datetime_immutable"/>
+        <field name="updatedAt" column="updated_at" type="datetime_immutable"/>
+
+        <one-to-one field="shipment" target-entity="Sylius\Component\Shipping\Model\ShipmentInterface">
+            <join-column name="shipment_id" referenced-column-name="id" nullable="false" unique="true" on-delete="CASCADE"/>
+        </one-to-one>
+    </entity>
+</doctrine-mapping>

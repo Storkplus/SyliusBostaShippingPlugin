@@ -1,0 +1,89 @@
+{% set order = hookable_metadata.context.resource %}
+{% set bosta_shipments = order.shipments|filter(shipment => bosta_is_method(shipment.method)) %}
+
+{% if bosta_shipments is not empty %}
+    <div class="card mb-3" id="bosta" {{ sylius_test_html_attribute('bosta-card') }}>
+        <div class="card-header">
+            <div class="card-title d-flex align-items-center gap-2">
+                {% include '@StorkplusSyliusBostaShippingPlugin/shared/bosta_logo.svg.twig' with { height: 18 } %}
+                <span>{{ 'storkplus_sylius_bosta_shipping.ui.title'|trans }}</span>
+            </div>
+        </div>
+        <div class="list-group list-group-flush">
+            {% for shipment in bosta_shipments %}
+                {% set delivery = bosta_delivery(shipment) %}
+                {% set csrf = csrf_token(bosta_csrf_id(shipment)) %}
+                <div class="list-group-item" {{ sylius_test_html_attribute('bosta-shipment', shipment.id) }}>
+                    <div class="d-flex flex-wrap justify-content-between align-items-start gap-2">
+                        <div>
+                            <div class="fw-bold">{{ shipment.method.name }}</div>
+                            {% if delivery is null %}
+                                <span class="badge bg-secondary-lt">{{ 'storkplus_sylius_bosta_shipping.ui.status.not_created'|trans }}</span>
+                            {% elseif delivery.created %}
+                                <span class="badge bg-success-lt" {{ sylius_test_html_attribute('bosta-status') }}>{{ 'storkplus_sylius_bosta_shipping.ui.status.created'|trans }}</span>
+                            {% elseif delivery.failed %}
+                                <span class="badge bg-danger-lt" {{ sylius_test_html_attribute('bosta-status') }}>{{ 'storkplus_sylius_bosta_shipping.ui.status.failed'|trans }}</span>
+                            {% else %}
+                                <span class="badge bg-warning-lt" {{ sylius_test_html_attribute('bosta-status') }}>{{ ('storkplus_sylius_bosta_shipping.ui.status.' ~ delivery.status)|trans }}</span>
+                            {% endif %}
+                        </div>
+
+                        <div class="d-flex flex-wrap gap-2">
+                            {% if delivery is null or not delivery.created %}
+                                <form method="post" action="{{ path('storkplus_sylius_bosta_shipping_admin_create', { id: shipment.id }) }}">
+                                    <input type="hidden" name="_csrf_token" value="{{ csrf }}">
+                                    <button type="submit" class="btn btn-sm btn-primary" {{ sylius_test_html_attribute('bosta-create') }}>
+                                        {{ ux_icon('tabler:truck-delivery') }}
+                                        {{ (delivery is not null and delivery.attempts > 0 ? 'storkplus_sylius_bosta_shipping.ui.retry' : 'storkplus_sylius_bosta_shipping.ui.create')|trans }}
+                                    </button>
+                                </form>
+                            {% else %}
+                                <a class="btn btn-sm btn-outline-primary" href="{{ path('storkplus_sylius_bosta_shipping_admin_awb', { id: shipment.id }) }}" target="_blank" rel="noopener">
+                                    {{ ux_icon('tabler:printer') }} {{ 'storkplus_sylius_bosta_shipping.ui.airway_bill'|trans }}
+                                </a>
+                                <form method="post" action="{{ path('storkplus_sylius_bosta_shipping_admin_refresh', { id: shipment.id }) }}">
+                                    <input type="hidden" name="_csrf_token" value="{{ csrf }}">
+                                    <button type="submit" class="btn btn-sm btn-outline-secondary">{{ ux_icon('tabler:refresh') }} {{ 'storkplus_sylius_bosta_shipping.ui.refresh'|trans }}</button>
+                                </form>
+                                <form method="post" action="{{ path('storkplus_sylius_bosta_shipping_admin_recreate', { id: shipment.id }) }}" onsubmit="return confirm('{{ 'storkplus_sylius_bosta_shipping.ui.recreate_confirm'|trans|e('js') }}');">
+                                    <input type="hidden" name="_csrf_token" value="{{ csrf }}">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger" {{ sylius_test_html_attribute('bosta-recreate') }}>{{ ux_icon('tabler:replace') }} {{ 'storkplus_sylius_bosta_shipping.ui.recreate'|trans }}</button>
+                                </form>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    {% if delivery is not null %}
+                        <dl class="row mt-2 mb-0 small">
+                            {% if delivery.trackingNumber %}
+                                <dt class="col-5 col-md-4">{{ 'storkplus_sylius_bosta_shipping.ui.tracking_number'|trans }}</dt>
+                                <dd class="col-7 col-md-8">
+                                    <a href="{{ bosta_merchant_tracking_url(delivery.trackingNumber) }}" target="_blank" rel="noopener" {{ sylius_test_html_attribute('bosta-tracking-link') }}>
+                                        <span class="font-monospace">{{ delivery.trackingNumber }}</span> {{ ux_icon('tabler:external-link') }}
+                                    </a>
+                                </dd>
+                            {% endif %}
+                            {% if delivery.stateLabel %}
+                                <dt class="col-5 col-md-4">{{ 'storkplus_sylius_bosta_shipping.ui.bosta_state'|trans }}</dt>
+                                <dd class="col-7 col-md-8">
+                                    <span class="{{ bosta_is_problem_state(delivery.stateCode) ? 'text-danger fw-bold' : '' }}">{{ delivery.stateLabel }}</span>
+                                    {% if delivery.exceptionReason %}<div class="text-warning">{{ delivery.exceptionReason }}</div>{% endif %}
+                                </dd>
+                            {% endif %}
+                            {% if delivery.lastError and not delivery.created %}
+                                <dt class="col-5 col-md-4">{{ 'storkplus_sylius_bosta_shipping.ui.last_error'|trans }}</dt>
+                                <dd class="col-7 col-md-8 text-danger" {{ sylius_test_html_attribute('bosta-error') }}>{{ delivery.lastError }}</dd>
+                            {% endif %}
+                            <dt class="col-5 col-md-4">{{ 'storkplus_sylius_bosta_shipping.ui.attempts'|trans }}</dt>
+                            <dd class="col-7 col-md-8">{{ delivery.attempts }}{% if delivery.lastAttemptAt %} · {{ delivery.lastAttemptAt|date('Y-m-d H:i') }}{% endif %}</dd>
+                            {% if delivery.lastWebhookAt %}
+                                <dt class="col-5 col-md-4">{{ 'storkplus_sylius_bosta_shipping.ui.last_update'|trans }}</dt>
+                                <dd class="col-7 col-md-8">{{ delivery.lastWebhookAt|date('Y-m-d H:i') }}</dd>
+                            {% endif %}
+                        </dl>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endif %}
