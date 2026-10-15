@@ -58,6 +58,14 @@
                  label="storkplus_sylius_bosta_shipping.calculator" />
         </service>
 
+        <!-- Keeps a method that cannot price the shipment out of checkout instead of failing it -->
+        <service id="storkplus_sylius_bosta_shipping.checker.fee_eligibility" class="Storkplus\SyliusBostaShippingPlugin\Checker\BostaFeeEligibilityChecker">
+            <argument type="service" id="storkplus_sylius_bosta_shipping.calculator" />
+            <argument type="service" id="logger" />
+            <tag name="monolog.logger" channel="bosta" />
+            <tag name="sylius.shipping_method_eligibility_checker" />
+        </service>
+
         <service id="Storkplus\SyliusBostaShippingPlugin\Form\Type\BostaCalculatorConfigurationType">
             <argument type="service" id="storkplus_sylius_bosta_shipping.client" />
             <argument type="service" id="router" />

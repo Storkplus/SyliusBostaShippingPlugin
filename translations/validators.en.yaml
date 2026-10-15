@@ -1,3 +1,5 @@
 storkplus_sylius_bosta_shipping:
     api_key:
         not_blank: 'Enter your Bosta API key.'
+    channel_amount:
+        not_blank: 'Enter a flat amount for channel %channel%. It is charged whenever Bosta cannot estimate the fee.'
