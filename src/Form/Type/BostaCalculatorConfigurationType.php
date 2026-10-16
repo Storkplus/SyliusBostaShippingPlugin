@@ -8,6 +8,7 @@ use Storkplus\SyliusBostaShippingPlugin\Api\BostaApiException;
 use Storkplus\SyliusBostaShippingPlugin\Api\BostaClientInterface;
 use Storkplus\SyliusBostaShippingPlugin\Bosta;
 use Sylius\Bundle\CoreBundle\Form\Type\Shipping\Calculator\ChannelBasedFlatRateConfigurationType;
+use Sylius\Component\Channel\Model\ChannelsAwareInterface;
 use Sylius\Component\Payment\Model\PaymentMethodInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
 use Symfony\Component\Form\AbstractType;
@@ -17,9 +18,12 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 final class BostaCalculatorConfigurationType extends AbstractType
 {
@@ -92,6 +96,8 @@ final class BostaCalculatorConfigurationType extends AbstractType
             ])
             ->add(Bosta::CONFIG_CHANNELS, ChannelBasedFlatRateConfigurationType::class, [
                 'label' => 'storkplus_sylius_bosta_shipping.form.channels',
+                // Required in estimate mode too: it is what gets charged when Bosta cannot price the city.
+                'constraints' => [new Callback(callback: [self::class, 'validateChannelAmounts'], groups: self::GROUPS)],
             ])
             ->add(Bosta::CONFIG_COD_PAYMENT_METHODS, ChoiceType::class, [
                 'label' => 'storkplus_sylius_bosta_shipping.form.cod_payment_methods',
@@ -139,6 +145,31 @@ final class BostaCalculatorConfigurationType extends AbstractType
                 }
             })
         ;
+    }
+
+    /**
+     * Every channel the method is offered in needs a flat amount. Without one, a Bosta estimate that comes back
+     * empty leaves the shipment with no price.
+     */
+    public static function validateChannelAmounts(mixed $channels, ExecutionContextInterface $context): void
+    {
+        $channels = is_array($channels) ? $channels : [];
+
+        $root = $context->getRoot();
+        $method = $root instanceof FormInterface ? $root->getData() : null;
+        $codes = $method instanceof ChannelsAwareInterface
+            ? array_filter(array_map(static fn ($channel): ?string => $channel->getCode(), $method->getChannels()->toArray()))
+            : array_keys($channels);
+
+        foreach ($codes as $code) {
+            $amount = is_array($channels[$code] ?? null) ? ($channels[$code]['amount'] ?? null) : null;
+            if (!is_numeric($amount)) {
+                $context->buildViolation('storkplus_sylius_bosta_shipping.channel_amount.not_blank')
+                    ->setParameter('%channel%', (string) $code)
+                    ->atPath(sprintf('[%s][amount]', $code))
+                    ->addViolation();
+            }
+        }
     }
 
     public function getBlockPrefix(): string

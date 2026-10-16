@@ -1,3 +1,5 @@
 storkplus_sylius_bosta_shipping:
     api_key:
         not_blank: 'أدخل مفتاح API الخاص ببوسطة.'
+    channel_amount:
+        not_blank: 'أدخل مبلغًا ثابتًا للقناة %channel%. يُحتسب كلما تعذّر على بوسطة تقدير رسوم الشحن.'

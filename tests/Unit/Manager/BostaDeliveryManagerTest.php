@@ -14,7 +14,6 @@ use Storkplus\SyliusBostaShippingPlugin\Manager\DeliveryStateApplier;
 use Storkplus\SyliusBostaShippingPlugin\Manager\RecreationNotAllowedException;
 use Storkplus\SyliusBostaShippingPlugin\Payload\DeliveryPayloadFactory;
 use Storkplus\SyliusBostaShippingPlugin\Repository\BostaDeliveryRepository;
-use Sylius\Component\Core\Model\Shipment;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Tests\Storkplus\SyliusBostaShippingPlugin\Unit\Fixture\FakeBostaClient;
 use Tests\Storkplus\SyliusBostaShippingPlugin\Unit\Fixture\InMemoryStateMachine;
