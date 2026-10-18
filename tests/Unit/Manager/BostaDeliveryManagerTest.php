@@ -100,7 +100,7 @@ final class BostaDeliveryManagerTest extends TestCase
         self::assertSame(['7000001'], $this->client->terminated);
         self::assertSame('7000002', $delivery->getTrackingNumber());
         self::assertSame('7000002', $shipment->getTracking());
-        self::assertSame('SMASH-000042-77-R2', $this->client->created[1]['uniqueBusinessReference']);
+        self::assertSame('SHOP-000042-77-R2', $this->client->created[1]['uniqueBusinessReference']);
     }
 
     public function test_a_delivery_already_on_its_way_cannot_be_recreated(): void
@@ -126,7 +126,7 @@ final class BostaDeliveryManagerTest extends TestCase
         });
 
         $router = $this->createMock(UrlGeneratorInterface::class);
-        $router->method('generate')->willReturn('https://smash.storkplus.com/shipping/bosta/webhook');
+        $router->method('generate')->willReturn('https://shop.example.com/shipping/bosta/webhook');
 
         return new BostaDeliveryManager(
             $this->client,

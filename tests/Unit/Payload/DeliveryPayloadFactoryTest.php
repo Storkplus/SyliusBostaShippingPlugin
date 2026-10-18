@@ -24,14 +24,14 @@ final class DeliveryPayloadFactoryTest extends TestCase
 
         self::assertSame(10, $payload['type']);
         self::assertSame(360.0, $payload['cod']);
-        self::assertSame('SMASH-000042-77', $payload['uniqueBusinessReference']);
+        self::assertSame('SHOP-000042-77', $payload['uniqueBusinessReference']);
         self::assertSame($payload['uniqueBusinessReference'], $payload['businessReference']);
         self::assertSame('01001234567', $payload['receiver']['phone']);
         self::assertSame('Aya', $payload['receiver']['firstName']);
         self::assertSame('Cairo', $payload['dropOffAddress']['city']);
         self::assertSame(2, $payload['specs']['packageDetails']['itemsCount']);
         self::assertSame('2 × Smash Burger', $payload['specs']['packageDetails']['description']);
-        self::assertSame('https://smash.storkplus.com/shipping/bosta/webhook', $payload['webhookUrl']);
+        self::assertSame('https://shop.example.com/shipping/bosta/webhook', $payload['webhookUrl']);
         self::assertSame(['X-Bosta-Secret' => 'secret-0123456789abcdef'], $payload['webhookCustomHeaders']);
     }
 
@@ -82,7 +82,7 @@ final class DeliveryPayloadFactoryTest extends TestCase
     private function factory(): DeliveryPayloadFactory
     {
         $router = $this->createMock(UrlGeneratorInterface::class);
-        $router->method('generate')->willReturn('https://smash.storkplus.com/shipping/bosta/webhook');
+        $router->method('generate')->willReturn('https://shop.example.com/shipping/bosta/webhook');
 
         return new DeliveryPayloadFactory(new BostaAddressResolver(new FakeBostaClient()), $router);
     }

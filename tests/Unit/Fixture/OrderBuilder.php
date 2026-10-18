@@ -32,7 +32,7 @@ final class OrderBuilder
         $channel = new Channel();
         $channel->setCode('WEB');
         $channel->setName('Smash');
-        $channel->setHostname('smash.storkplus.com');
+        $channel->setHostname('shop.example.com');
 
         $customer = new Customer();
         $customer->setEmail('aya@example.com');
